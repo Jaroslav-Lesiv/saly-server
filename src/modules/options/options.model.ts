@@ -8,8 +8,8 @@ import { IOptionDocument, IOptionModel } from './options.types';
 const branchRelationSchema: any = new Schema({
   _id: { type: Schema.Types.ObjectId, ref: MODELS.BRANCH, required: true, index: true },
   name: { type: String, required: true },
-  active: { type: Boolean, required: true },
-  deleted: { type: Boolean, required: true },
+  active: { type: Boolean, required: true, index: true },
+  deleted: { type: Boolean, required: true, index: true },
   external: { type: String, required: false, default: null },
 });
 
@@ -17,8 +17,8 @@ const ingredientRelationSchema: any = {
   _id: { type: Schema.Types.ObjectId, ref: MODELS.BRANCH, required: true, index: true },
   external: { type: String, default: null, required: false },
   name: { type: String, required: true, intl: true },
-  active: { type: Boolean, default: true, required: true },
-  deleted: { type: Boolean, default: false, required: true },
+  active: { type: Boolean, default: true, required: true, index: true },
+  deleted: { type: Boolean, default: false, required: true, index: true },
   price: { type: Number, default: 0, required: true },
   calories: {
     protein: { type: Number, default: 0, required: true, min: 0 },
@@ -31,8 +31,8 @@ const ingredientRelationSchema: any = {
   // maximum: { type: Number, default: 0, required: true },
 };
 
-const productTaxSchema: Schema<ITaxDocument> = new Schema({
-  _id: { type: Types.ObjectId, required: true },
+const optionTaxSchema: Schema<ITaxDocument> = new Schema({
+  _id: { type: Types.ObjectId, required: true, index: true },
   external: { type: String, default: null, required: false },
   name: { type: String, default: '', required: true },
   deleted: { type: Boolean, default: false, required: true },
@@ -42,7 +42,8 @@ const productTaxSchema: Schema<ITaxDocument> = new Schema({
 export const optionSchema: Schema<IOptionDocument> = new Schema(
   {
     external: { type: String, default: null, required: false },
-    active: { type: Boolean, default: true, required: true },
+    active: { type: Boolean, default: true, required: true, index: true },
+    deleted: { type: Boolean, default: false, required: true, index: true },
     name: { type: String, required: true },
     image: { type: String, default: '', required: false },
     unit: {
@@ -61,7 +62,7 @@ export const optionSchema: Schema<IOptionDocument> = new Schema(
       regular_cost: { type: Number, required: true },
     },
     tax: {
-      type: productTaxSchema,
+      type: optionTaxSchema,
       required: false,
       default: null,
     },

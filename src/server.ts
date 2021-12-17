@@ -1,51 +1,17 @@
-import compression from 'compression';
-import cors from 'cors';
-import express from 'express';
-import { Express, NextFunction, Request, Response } from 'express-serve-static-core';
-import * as http from 'http';
-import passport from 'passport';
-
 import { config } from './config';
-import { AppRouter } from './router';
-import database from './services/database';
-import { ErrorHandling } from './services/errorHandling';
+import * as http from 'http';
+import app from './app';
+import { Database } from './services/database';
 
-const app: any = express();
-const router = new AppRouter();
-
-app.use(cors());
-app.use(compression());
-app.use(express.json());
-app.use(express.urlencoded());
-
-app.use(passport.initialize());
-app.set('port', config.PORT);
-app.use('/api/v1/', router.getAppRouter());
-// app.use('*', (req, res) => {
-//   res.status(404).json({ message: '' });
-// });
-
-function initErrorHandling(app: Express): void {
-  // catch 404
-  app.use((req: Request, res: Response) => {
-    ErrorHandling.routeNotFound(req, res);
-  });
-
-  // prod error handling without stack traces
-  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.log('initErrorHandling:: err', err);
-    ErrorHandling.prod(err, req, res, next);
-  });
-}
-
-initErrorHandling(app);
 const runServer = async () => {
   const server = http.createServer(app);
   server.on('error', onError);
   server.on('listening', onListening);
   console.log('RUNNING DB', config.PORT);
 
-  await database();
+  const database = new Database();
+  await database.connect();
+  
   server.listen(config.PORT);
   console.log('LISTENING', config.PORT);
 };

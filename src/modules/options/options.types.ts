@@ -9,6 +9,7 @@ export interface Option {
   _id?: any;
   external: string | null;
   active: boolean;
+  deleted: boolean;
   name: string;
   image: string;
   unit: {

@@ -15,7 +15,7 @@ class OptionController {
   public getOptions = async (req: any, res: Response, next: any) => {
     try {
       const { pagination, query } = paginator(req.query);
-      const result = await OptionModel.paginate(query, pagination);
+      const result = await OptionModel.paginate({...query, 'branches.list._id': '6192a16f70a1cf6a4864a542' }, pagination);
       res.send(safeHydrationDocs(result));
     } catch (error: any) {
       next(error);
